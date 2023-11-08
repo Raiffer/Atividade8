@@ -6,7 +6,7 @@ typedef struct funcionario{
     int code;
     char * cargo;
     int slr;
-    struct fun*prox;
+    struct funcionario*prox;
 }fun;
 
 typedef struct filial{
@@ -15,12 +15,12 @@ typedef struct filial{
     int grt;
     int vnd;
     struct filial*prox;
-    struct fun*proxf;
+    fun*proxf;
 }fil;
 
-int numf = 0
+int numf = 0;
 
-fil * incio = NULL;
+fil * inicio = NULL;
 
 void add_fil(int num, char*nome){
     
@@ -29,9 +29,16 @@ void add_fil(int num, char*nome){
         fil*novo = malloc(sizeof(fil));
         novo->num=num;
         novo->nome=nome;
-        novo->grt=NULL;
-        novo->vnd=NULL;
+        novo->grt=0;
+        novo->vnd=0;
         numf++;
+        
+        if(inicio == NULL)
+            inicio = novo;
+        else{
+            novo->prox=inicio;
+            inicio=novo;
+        }
         
     }else if(numf >= 4){
         printf("Numero maximo de filiais exedido.\n");
@@ -41,9 +48,8 @@ void add_fil(int num, char*nome){
 void add(int num_fil, int code, char*cargo, int slr){
     
     fun*novo=malloc(sizeof(fun));
-    novo->num_fil=num_fil;
-    
-    fil*aux=incio;
+
+    fil*aux=inicio;
     do{
         if (aux == NULL){
             break;
@@ -51,12 +57,81 @@ void add(int num_fil, int code, char*cargo, int slr){
         aux=aux->prox;
     }while(aux->num != num_fil);
     
+    novo->num_fil=num_fil;
+    
     if(aux==NULL){
         printf("Filial nao encontrada.\n");
+        free(novo);
+    }else{
+        
+        fun * aus = aux->proxf;
+        while(aus != NULL){
+            if (aus->code == code){
+                break;
+            }
+            aus=aus->prox;
+        }
+        if (aus->code = code){
+            
+            printf("Codigo ja utilizado.\n");
+            free(novo);
+        }else{
+            novo->code=code;
+        
+            if (aux->grt >= 1 || cargo== "G"){
+                
+                printf("Numero maximo de gerentes exedido.\n");
+                free(novo);
+                
+            }else if(aux->vnd >= 4 || cargo== "V"){
+                
+                printf("Numero maximo de vendedores exedido.\n");
+                free(novo);
+                
+            }else{
+                
+                if(cargo == "G"){
+                
+                    novo->cargo = cargo;
+                    aux->grt++;
+                
+                }else if(cargo == "V"){
+                
+                    novo->cargo = cargo;
+                    aux->vnd++;
+                
+                }
+            
+                novo->slr = slr;
+                novo->prox = NULL;
+            
+                if (aux->proxf == NULL)
+                    aux->proxf = novo;
+                else{
+                    novo->prox = aux->proxf;
+                    aux->proxf = novo;
+                }
+            }  
+        }
+
     }
 }
 
-
+int main(){
+    while(1){
+        int x = 0;
+        printf("O que deseja fazer?\n");
+        printf("1 - Adcionar Filial.\n");
+        printf("2 - Adcionar Funcionario.\n");
+        printf("3 - Visualizar.\n");
+        printf("0 - Sair.\n");
+        printf("Comando: ");
+        scanf("%d", &x);
+        if (x == 0){
+            break;
+        }
+    }
+}
 
 
 
