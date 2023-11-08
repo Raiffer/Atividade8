@@ -45,7 +45,7 @@ void add_fil(int num, char*nome){
     }
 }
 
-void add(int num_fil, int code, char*cargo, int slr){
+void add_fun(int num_fil, int code, char*cargo, int slr){
     
     fun*novo=malloc(sizeof(fun));
 
@@ -128,8 +128,22 @@ int main(){
         printf("Comando: ");
         scanf("%d", &x);
         if (x == 0){
+            
+            printf("Finalizando...\n");
             break;
+            
+        }else if(x == 1){
+            
+            int num;
+            char * nome;
+            printf("Digite o Numero da Filial: ");
+            scanf("%d", &num);
+            printf("Digite o nome da Filial: ");
+            scanf("%s", &nome);
+            
+            add_fil(num, nome);
         }
+        printf("\n");
     }
 }
 
