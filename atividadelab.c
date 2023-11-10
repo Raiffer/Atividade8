@@ -1,156 +1,150 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-typedef struct funcionario{
+typedef struct funcionario {
     int num_fil;
     int code;
-    char * cargo;
+    char cargo;
     int slr;
-    struct funcionario*prox;
-}fun;
+    struct funcionario* prox;
+} fun;
 
-typedef struct filial{
+typedef struct filial {
     int num;
-    char*nome;
+    char *nome;
     int grt;
     int vnd;
-    struct filial*prox;
-    fun*proxf;
-}fil;
+    struct filial* prox;
+    fun* proxf;
+} fil;
 
 int numf = 0;
 
-fil * inicio = NULL;
+fil* inicio = NULL;
 
-void add_fil(int num, char*nome){
-    
-    if(numf < 4){
-        
-        fil*novo = malloc(sizeof(fil));
-        novo->num=num;
-        novo->nome=nome;
-        novo->grt=0;
-        novo->vnd=0;
+void add_fil(int num, char *nome) {
+    if (numf < 4) {
+        fil* novo = malloc(sizeof(fil));
+        novo->num = num;
+        novo->nome = strdup(nome);
+        novo->grt = 0;
+        novo->vnd = 0;
         numf++;
-        
-        if(inicio == NULL)
+
+        if (inicio == NULL)
             inicio = novo;
-        else{
-            novo->prox=inicio;
-            inicio=novo;
+        else {
+            novo->prox = inicio;
+            inicio = novo;
         }
-        
-    }else if(numf >= 4){
-        printf("Numero maximo de filiais exedido.\n");
+    } else {
+        printf("Número máximo de filiais excedido.\n");
     }
 }
 
-void add_fun(int num_fil, int code, char*cargo, int slr){
+void add_fun(int num_fil, int code, char cargo, int slr) {
+    fun* novo = malloc(sizeof(fun));
+    fil* aux = inicio;
     
-    fun*novo=malloc(sizeof(fun));
-
-    fil*aux=inicio;
-    do{
-        if (aux == NULL){
-            break;
-        }
-        aux=aux->prox;
-    }while(aux->num != num_fil);
+    while (aux != NULL && aux->num != num_fil) {
+        aux = aux->prox;
+    }
     
-    novo->num_fil=num_fil;
-    
-    if(aux==NULL){
-        printf("Filial nao encontrada.\n");
+    if (aux == NULL) {
+        printf("Filial não encontrada.\n");
         free(novo);
-    }else{
-        
-        fun * aus = aux->proxf;
-        while(aus != NULL){
-            if (aus->code == code){
-                break;
+    } else {
+        fun* aus = aux->proxf;
+        while (aus != NULL) {
+            if (aus->code == code) {
+                printf("Código já utilizado.\n");
+                free(novo);
+                return;
             }
-            aus=aus->prox;
+            aus = aus->prox;
         }
-        if (aus->code = code){
-            
-            printf("Codigo ja utilizado.\n");
-            free(novo);
-        }else{
-            novo->code=code;
         
-            if (aux->grt >= 1 || cargo== "G"){
-                
-                printf("Numero maximo de gerentes exedido.\n");
+        novo->num_fil = num_fil;
+        novo->code = code;
+        
+        if (cargo == 'G') {
+            if (aux->grt >= 1) {
+                printf("Número máximo de gerentes excedido.\n");
                 free(novo);
-                
-            }else if(aux->vnd >= 4 || cargo== "V"){
-                
-                printf("Numero maximo de vendedores exedido.\n");
+                return;
+            }
+            novo->cargo = 'G';
+            aux->grt++;
+        } else if (cargo == 'V') {
+            if (aux->vnd >= 4) {
+                printf("Número máximo de vendedores excedido.\n");
                 free(novo);
-                
-            }else{
-                
-                if(cargo == "G"){
-                
-                    novo->cargo = cargo;
-                    aux->grt++;
-                
-                }else if(cargo == "V"){
-                
-                    novo->cargo = cargo;
-                    aux->vnd++;
-                
-                }
-            
-                novo->slr = slr;
-                novo->prox = NULL;
-            
-                if (aux->proxf == NULL)
-                    aux->proxf = novo;
-                else{
-                    novo->prox = aux->proxf;
-                    aux->proxf = novo;
-                }
-            }  
+                return;
+            }
+            novo->cargo = 'V';
+            aux->vnd++;
         }
-
+        
+        novo->slr = slr;
+        novo->prox = NULL;
+        
+        if (aux->proxf == NULL)
+            aux->proxf = novo;
+        else {
+            novo->prox = aux->proxf;
+            aux->proxf = novo;
+        }
     }
 }
 
-int main(){
-    while(1){
+void tabela(){
+    fil* aux = inicio;
+    fun* aju = inicio->proxf;
+    int 
+    while(aux != NULL){
+        while(aju != NULL){
+            
+        }
+    }
+}
+
+int main() {
+    while (1) {
         int x = 0;
         printf("O que deseja fazer?\n");
-        printf("1 - Adcionar Filial.\n");
-        printf("2 - Adcionar Funcionario.\n");
+        printf("1 - Adicionar Filial.\n");
+        printf("2 - Adicionar Funcionário.\n");
         printf("3 - Visualizar.\n");
         printf("0 - Sair.\n");
         printf("Comando: ");
         scanf("%d", &x);
-        if (x == 0){
-            
+        if (x == 0) {
             printf("Finalizando...\n");
             break;
-            
-        }else if(x == 1){
-            
+        } else if (x == 1) {
             int num;
-            char * nome;
-            printf("Digite o Numero da Filial: ");
+            char nome[50];
+            printf("Digite o Número da Filial: ");
             scanf("%d", &num);
             printf("Digite o nome da Filial: ");
-            scanf("%s", &nome);
-            
+            scanf("%s", nome); 
             add_fil(num, nome);
+        } else if (x == 2) {
+            int num_fil, code, slr;
+            char cargo;
+            printf("Digite o Número da Filial: ");
+            scanf("%d", &num_fil);
+            printf("Digite o código do funcionário: ");
+            scanf("%d", &code);
+            printf("Digite o cargo (G para gerente, V para vendedor): ");
+            scanf(" %c", &cargo);  
+            printf("Digite o salário: ");
+            scanf("%d", &slr);
+            add_fun(num_fil, code, cargo, slr);
         }
         printf("\n");
     }
+
+    return 0;
 }
-
-
-
-
-
-
-
-
