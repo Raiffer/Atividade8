@@ -98,15 +98,31 @@ void add_fun(int num_fil, int code, char cargo, int slr) {
     }
 }
 
-void tabela(){
-    fil* aux = inicio;
-    fun* aju = inicio->proxf;
-    int 
+void imprimir(){
+    int sal, salt = 0;
+    fil * aux = inicio;
+    
     while(aux != NULL){
-        while(aju != NULL){
-            
+        sal = 0;
+        printf("Filial: %s\n", aux->nome);
+        printf("Empregados: \n");
+        fun * aus = aux->proxf;
+        
+        while(aus != NULL){
+            printf("Funcionario %d\n", aus->code);
+            printf("Cargo: %c\n", aus->cargo);
+            printf("Salario: %d\n", aus->slr);
+            printf("\n");
+            sal = sal + aus->slr;
+            aus = aus->prox;
         }
+        printf("Gastos pela Filial: %d\n", sal);
+        printf("\n");
+        salt = salt + sal;
+        aux = aux->prox;
     }
+    printf("\n");
+    printf("Gastos totais da Empresa: %d\n", salt);
 }
 
 int main() {
@@ -118,7 +134,9 @@ int main() {
         printf("3 - Visualizar.\n");
         printf("0 - Sair.\n");
         printf("Comando: ");
+        printf("\n");
         scanf("%d", &x);
+        
         if (x == 0) {
             printf("Finalizando...\n");
             break;
@@ -142,6 +160,8 @@ int main() {
             printf("Digite o salário: ");
             scanf("%d", &slr);
             add_fun(num_fil, code, cargo, slr);
+        }else if (x == 3){
+            imprimir();
         }
         printf("\n");
     }
